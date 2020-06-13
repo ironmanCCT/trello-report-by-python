@@ -1,9 +1,10 @@
 #trello attachment bulk downloader v0.1 by mwong@convergencect.com
-## 1.export your file to xlsx format with 2 coloumns, [casename, attachments] using TrelloExport Google Chrome Add-on. 
-## 2.place this script and xlsx export file into same folder
+## 1. export your file to xlsx format with 2 coloumns, [casename, attachments] using TrelloExport Google Chrome Add-on. 
+## 2. place this script and xlsx export file into same folder
 ## 3. requires python 3.7+ and the imported packages.
-## 4. you can adjust the sleep timer to be shorter than the default 5 seconds to download files faster.
-## 5. Added Support For Threading 
+## 4. you can adjust the sleep timer to be shorter than the default .1 seconds to download files faster. But be careful to watch out for remote host blocking due to too many get requests.
+## 5. Added Support For Threading (1 thread per card)
+
 import os
 import requests
 from openpyxl import load_workbook
@@ -11,7 +12,11 @@ import re
 import pprint
 import time
 import threading
-workbook = load_workbook(filename='TrelloExport_20200610180734.xlsx')
+import datetime
+
+begin_time = datetime.datetime.now()
+
+workbook = load_workbook(filename='YOUR_TRELLO_EXPORT.xlsx')
 worksheet = workbook['TrelloExport']
 #attachments = []
 #caseNames=[]
@@ -21,7 +26,7 @@ print('current working directory: ' + cwd)
 
 
 
-   
+    #556 cards
 def trelloBulkDownloadAttachments(start, end):
     for i in range(start,end):
         print('loop number:' + str(i))
@@ -56,7 +61,7 @@ def trelloBulkDownloadAttachments(start, end):
                 #print(result)
                 try:
                     for name_and_id_and_url in result:
-                        time.sleep(1)
+                        time.sleep(.1)
                         filename = name_and_id_and_url[0].replace('[','').replace(']','')  #get the name from the first item in tuple
                         if('https:' in filename):
                             print('attachment is not a file')
@@ -72,18 +77,14 @@ def trelloBulkDownloadAttachments(start, end):
                 else:
                     print ("Successfully downloaded all files to  the directory %s " % path)
                     continue
-#556 cards to download
-t1 = threading.Thread(target=trelloBulkDownloadAttachments, args=(1,100))  
-t2 = threading.Thread(target=trelloBulkDownloadAttachments, args=(100,200))
-t3 = threading.Thread(target=trelloBulkDownloadAttachments, args=(200,300))
-t4 = threading.Thread(target=trelloBulkDownloadAttachments, args=(300,400))
-t5 = threading.Thread(target=trelloBulkDownloadAttachments, args=(400,500))
-t6 = threading.Thread(target=trelloBulkDownloadAttachments, args=(500,600))
 
+thread_list = []
+for i in range(1,worksheet.max_row):
+    thread = threading.Thread(target=trelloBulkDownloadAttachments, args=(i, i+1))
+    thread_list.append(thread)
 
-t1.start()
-t2.start()
-t3.start()
-t4.start()
-t5.start()
-t6.start()
+for thread in thread_list:
+    thread.start()
+   
+
+print(datetime.datetime.now() - begin_time)
