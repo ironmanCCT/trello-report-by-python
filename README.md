@@ -9,4 +9,4 @@
 
  3. requires python 3.7+ and the imported packages.
 
- 4. you can adjust the sleep timer to be shorter than the default 5 seconds to download files faster. but you may run into api-call host rejections if you download too quickly.
+ 4. you can adjust the sleep timer to be shorter than the default .1 seconds to download files faster. but you may run into api-call host rejections if you download too quickly.
