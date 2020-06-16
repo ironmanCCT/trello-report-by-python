@@ -3,7 +3,7 @@
 ## trello_attachment_downloader.py
 * bulkdownloads all attachments based on xlsx export list of attachments
 ### instructions:
- 1. export your file to xlsx format with 2 coloumns, [casename, attachments] using TrelloExport Google Chrome Add-on. 
+ 1. export your file to xlsx format with 2 coloumns, [casename, attachments] using TrelloExport Google Chrome Add-on. https://chrome.google.com/webstore/detail/trelloexport/kmmnaeamjfdnbhljpedgfchjbkbomahp?hl=en
 
  2. place this script and xlsx export file into same folder
 
